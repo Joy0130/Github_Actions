@@ -9,4 +9,3 @@ jobs:
     steps:
       - name: 每日提醒
         run: echo "新的一天開始了！"
-s
