@@ -1,0 +1,32 @@
+name: crawler news
+
+on:
+  schedule:
+    - cron: "*/5 * * * *" # UTC 時區，台灣時間要 +8
+  workflow_dispatch: # 允許手動觸發
+
+jobs:
+  update-sheet:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          pip install requests pandas
+
+      - name: Run script
+        run: python news.py
+
+      - name: Save csv
+        run: |
+          git add news.csv
+          git commit -m "Update news data"
+          git push -u origin main
