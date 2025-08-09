@@ -27,7 +27,7 @@ jobs:
 
       - name: Save csv
         run: |
-          git config --global user.name "Joy_0130"
+          git config --global user.name "Joy0130"
           git config --global user.email "gm10290014@gmail.com"
           git add news.csv
           git commit -m "Update news data"
