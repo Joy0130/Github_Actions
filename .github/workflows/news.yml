@@ -5,13 +5,17 @@ on:
     - cron: "*/5 * * * *" # UTC 時區，台灣時間要 +8
   workflow_dispatch: # 允許手動觸發
 
+permissions:
+  contents: write
 jobs:
   update-sheet:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true #預設為true
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -26,9 +30,15 @@ jobs:
         run: python news.py
 
       - name: Save csv
+        env:
+          GITHUB_TOKEN: secrets.ACCESS_GITHUB_TOKEN
         run: |
           git config --global user.name "Joy0130"
           git config --global user.email "gm10290014@gmail.com"
-          git add news.csv
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
           git commit -m "Update news data"
-          git push -u origin main
+          git push
